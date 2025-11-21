@@ -1,0 +1,306 @@
+--creo la tabella anagrafica
+CREATE TABLE Anagrafica(
+IDAnagrafica INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+Cognome NVARCHAR(30) NOT NULL,
+Nome NVARCHAR(30) NOT NULL,
+Indirizzo NVARCHAR (150) NOT NULL,
+Città NVARCHAR (50) NOT NULL,
+CAP INT NOT NULL, 
+CodiceFiscale NVARCHAR(16) NOT NULL,
+);
+
+--creo la tabella tipo di violazione
+CREATE TABLE TipoViolazione(
+IDViolazione INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+Descrizione NVARCHAR (500) NOT NULL,
+);
+
+--creao la tabella verbale
+CREATE TABLE Verbale(
+IDVerbale INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+DataViolazione DATETIME NOT NULL,
+IndirizzoViolazione NVARCHAR (150) NOT NULL,
+NominativoAgente NVARCHAR(70) NOT NULL,
+DataTrascrizioneVerbale DATETIME NOT NULL,
+Importo DECIMAL (10,2) NOT NULL,
+DecurtamentoPunti INT NOT NULL, 
+IDAnagrafica INT NOT NULL,
+FOREIGN KEY (IDAnagrafica) REFERENCES Anagrafica(IDAnagrafica),
+);
+
+--creo la tabella ponte per la relazione many to many tra verbale e violazione
+CREATE TABLE Verbale_Violazione(
+    IDVerbale INT NOT NULL,
+    IDViolazione INT NOT NULL,
+    PRIMARY KEY (IDVerbale, IDViolazione),
+    FOREIGN KEY (IDVerbale) REFERENCES Verbale(IDVerbale),
+    FOREIGN KEY (IDViolazione) REFERENCES TipoViolazione(IDViolazione)
+);
+
+--popolo la tabella violazione
+INSERT INTO TipoViolazione (Descrizione) VALUES
+('Violazione del codice della strada'),
+('Sosta vietata in area di divieto'),
+('Eccesso di velocità'),
+('Mancato rispetto del semaforo rosso'),
+('Guida senza cinture di sicurezza'),
+('Uso del cellulare durante la guida'),
+('Mancata revisione del veicolo'),
+('Mancata assicurazione del veicolo'),
+('Sosta in area riservata ai disabili senza permesso'),
+('Mancata precedenza a un pedone sulle strisce'),
+('Circolazione contromano'),
+('Sosta su marciapiede o pista ciclabile'),
+('Ostacolo alla circolazione o intralcio al traffico'),
+('Mancato uso del casco su veicolo a due ruote'),
+('Trasporto di passeggeri in numero superiore al consentito'),
+('Mancata esibizione dei documenti di guida o circolazione'),
+('Abbandono di rifiuti su suolo pubblico'),
+('Disturbo della quiete pubblica'),
+('Occupazione abusiva di suolo pubblico'),
+('Violazione delle norme sul commercio su area pubblica');
+
+--popolo la tabella anagrafica
+INSERT INTO Anagrafica (Cognome, Nome, Indirizzo, Città, CAP, CodiceFiscale) 
+VALUES('Rossi', 'Marco', 'Via Roma 12', 'Catania', '95100', 'RSSMRC80A01C351X'),
+('Bianchi', 'Luca', 'Via Milano 8', 'Milano', '20100', 'BNCLCU85B15F205H'),
+('Verdi', 'Giulia', 'Corso Italia 55', 'Torino', '10100', 'VRDGLI90C22L219Q'),
+('Neri', 'Sara', 'Via Garibaldi 7', 'Catania', '95100', 'NRESRA92D10C351E'),
+('Russo', 'Antonio', 'Via Etnea 102', 'Catania', '95100', 'RSSNTN75E14C351F'),
+('Ferrari', 'Anna', 'Piazza Duomo 1', 'Milano', '20121', 'FRRNNN88F02F205S'),
+('Gallo', 'Paolo', 'Via Firenze 88', 'Firenze', '50100', 'GLLPLA70G18D612R'),
+('Colombo', 'Elena', 'Via Libertà 40', 'Palermo', '90100', 'CLMLNE95H23G273L'),
+('Ricci', 'Davide', 'Via Venezia 16', 'Venezia', '30100', 'RCCDVD86I29L736N'),
+('Marini', 'Chiara', 'Via Dante 20', 'Genova', '16100', 'MRNCHR91L05D969G'),
+('Greco', 'Simone', 'Via Verdi 3', 'Verona', '37100', 'GRCSMN79M12L781A'),
+('Fontana', 'Martina', 'Via Mazzini 77', 'Bologna', '40100', 'FNTMRT93N30A944B'),
+('Giordano', 'Roberto', 'Via Po 9', 'Torino', '10123', 'GRDRRT82O19L219M'),
+('Costa', 'Francesca', 'Viale Europa 111', 'Roma', '00144', 'CSTFNC89P03H501C'),
+('De Luca', 'Giorgio', 'Via Bari 24', 'Bari', '70121', 'DLCGRG74Q09A662K'),
+('Lombardi', 'Silvia', 'Via Torino 14', 'Torino', '10121', 'LMBSLV96R27L219E'),
+('Moretti', 'Mauro', 'Via Napoli 60', 'Napoli', '80100', 'MRTMRA72S15F839H'),
+('Rizzo', 'Elisa', 'Via Manzoni 5', 'Napoli', '80123', 'RZZLSA90T28F839R'),
+('Caruso', 'Fabio', 'Via Leopardi 29', 'Catania', '95128', 'CRSFBA81U07C351O'),
+('Barbieri', 'Laura', 'Via Salvo D’Acquisto 8', 'Gravina di Catania', '95030', 'BRBLRA94V14C167P');
+
+
+--popolo la tabella verbale
+INSERT INTO Verbale (DataViolazione, IndirizzoViolazione, NominativoAgente, DataTrascrizioneVerbale, Importo, DecurtamentoPunti, IDAnagrafica) 
+VALUES('2014-12-02T14:30:00', 'Via Roma, 33 CAP 95037', 'Pippo Baudo', '2014-12-02T14:30:00', 125.36, 3, 1),
+('2015-01-11T09:15:00', 'Via Milano, 12 CAP 20100', 'Luca Verdi', '2015-01-11T10:00:00', 89.50, 2, 2),
+('2016-03-22T18:45:00', 'Corso Italia, 55 CAP 10100', 'Marco Rossi', '2016-03-22T19:10:00', 150.00, 5, 3),
+('2017-05-10T08:20:00', 'Via Garibaldi, 7 CAP 95100', 'Franco Bianchi', '2017-05-10T09:00:00', 75.25, 0, 4),
+('2018-07-14T21:30:00', 'Via Etnea, 102 CAP 95100', 'Gianni Neri', '2018-07-14T22:00:00', 200.00, 6, 5),
+('2019-02-02T16:00:00', 'Piazza Duomo, 1 CAP 20121', 'Paolo Serra', '2019-02-02T16:30:00', 56.90, 1, 6),
+('2020-04-18T11:10:00', 'Via Firenze, 88 CAP 50100', 'Anna Russo', '2020-04-18T12:00:00', 130.00, 4, 7),
+('2013-09-23T17:20:00', 'Via Libertà, 40 CAP 90100', 'Luigi Ferri', '2013-09-23T17:50:00', 98.75, 2, 8),
+('2014-11-29T07:45:00', 'Via Venezia, 16 CAP 30100', 'Sara Longo', '2014-11-29T08:15:00', 180.40, 5, 9),
+('2015-06-05T13:55:00', 'Via Dante, 20 CAP 16100', 'Riccardo Pini', '2015-06-05T14:10:00', 220.00, 6, 10),
+('2016-10-12T15:25:00', 'Via Verdi, 3 CAP 37100', 'Chiara Leone', '2016-10-12T15:45:00', 67.30, 1, 11),
+('2017-08-30T20:40:00', 'Via Mazzini, 77 CAP 40100', 'Davide Pagani', '2017-08-30T21:00:00', 140.00, 3, 12),
+('2018-01-19T10:05:00', 'Via Po, 9 CAP 10123', 'Martina Fava', '2018-01-19T10:20:00', 90.50, 2, 13),
+('2019-03-03T22:15:00', 'Viale Europa, 111 CAP 00144', 'Stefano Gallo', '2019-03-03T22:30:00', 300.00, 8, 14),
+('2020-12-09T06:55:00', 'Via Bari, 24 CAP 70121', 'Elena Costa', '2020-12-09T07:10:00', 45.00, 0, 15),
+('2021-07-27T12:40:00', 'Via Torino, 14 CAP 10121', 'Giorgio Riva', '2021-07-27T13:00:00', 110.00, 3, 16),
+('2012-04-15T19:55:00', 'Via Napoli, 60 CAP 80100', 'Francesca Lodi', '2012-04-15T20:20:00', 160.40, 4, 17),
+('2013-02-28T16:35:00', 'Via Manzoni, 5 CAP 80123', 'Carlo Fontana', '2013-02-28T17:00:00', 72.00, 1, 18),
+('2011-05-07T08:10:00', 'Via Leopardi, 29 CAP 95128', 'Michele Sanna', '2011-05-07T08:30:00', 210.00, 5, 19),
+('2011-05-07T08:10:00', 'Via Maggio, 89 CAP 95128', 'Michele Sanna', '2011-05-07T08:30:00', 210.00, 5, 19),
+('2019-02-02T16:00:00', 'Piazza Vittoria, 8 CAP 20121', 'Paolo Serra', '2019-02-02T16:30:00', 56.90, 1, 6),
+('2014-11-29T07:45:00', 'Via Cuneo, 44 CAP 30100', 'Sara Longo', '2014-11-29T08:15:00', 180.40, 5, 9),
+('2020-04-18T11:10:00', 'Via Gallo, 19 CAP 50100', 'Anna Russo', '2020-04-18T12:00:00', 130.00, 4, 7),
+('2016-03-22T18:45:00', 'Corso Magellano, 154 CAP 10100', 'Marco Rossi', '2016-03-22T19:10:00', 150.00, 5, 3),
+('2015-06-05T13:55:00', 'Via Boccaccio, 41 CAP 16100', 'Riccardo Pini', '2015-06-05T14:10:00', 220.00, 6, 10),
+('2014-12-02T14:30:00', 'Via Mercurio, 331 CAP 95037', 'Pippo Baudo', '2014-12-02T14:30:00', 125.36, 3, 1),
+('2015-01-11T09:15:00', 'Via Filocomo, 127 CAP 20100', 'Luca Verdi', '2015-01-11T10:00:00', 89.50, 2, 2),
+('2022-09-14T14:50:00', 'Via Salvo D’Acquisto, 8 CAP 95030', 'Simona Vitale', '2022-09-14T15:15:00', 55.25, 1, 20);
+
+--popolo la tabella verbale_violazione
+INSERT INTO Verbale_Violazione (IDVerbale, IDViolazione)
+VALUES(1, 7),
+(1,4),
+(2,5),
+(3, 1),
+(4, 4),
+(4, 7),
+(5, 3),
+(6, 19),
+(7,15),
+(8,15),
+(8, 2),
+(9, 4),
+(9, 2),
+(10, 3),
+(11, 20),
+(12, 16),
+(13,14),
+(14,18),
+(15, 5),
+(16, 14),
+(17, 17),
+(18, 3),
+(19, 9),
+(20, 17),
+(21, 4),
+(22, 2),
+(23, 3),
+(24, 20),
+(24, 5),
+(24,11),
+(25,18),
+(26, 5),
+(26, 14),
+(27, 17),
+(28, 3),
+(28, 9),
+(28, 10);
+
+--conteggio dei verbali trascritti
+CREATE PROCEDURE SelectVerbali
+AS
+BEGIN
+SET NOCOUNT ON;
+
+SELECT COUNT (*) AS VerbaliTrascritti FROM Verbale WHERE DataTrascrizioneVerbale IS NOT NULL
+END;
+
+EXEC SelectVerbali;
+
+--conteggio dei verbali trascritti raggruppati per anagrafe
+CREATE PROCEDURE CountVerbaliPerAnagrafe
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Nome, a.Cognome, COUNT (v.IDVerbale) AS VerbaliTrascritti FROM Verbale v
+JOIN Anagrafica a ON a.IDAnagrafica = v.IDAnagrafica GROUP BY a.Nome, a.Cognome;
+END;
+
+EXEC CountVerbaliPerAnagrafe;
+
+--conteggio dei verbali trascritti raggruppati per tipo di violazione
+CREATE PROCEDURE VerbaliTrascrittiPerViolazione
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT tp.Descrizione, COUNT (v.IDVerbale) AS VerbaliTrascritti FROM Verbale v
+JOIN Verbale_Violazione vv ON vv.IDVerbale = v.IDVerbale 
+JOIN TipoViolazione tp ON tp.IDViolazione = vv.IDViolazione
+GROUP BY tp.Descrizione;
+END;
+
+EXEC VerbaliTrascrittiPerViolazione;
+
+--totale dei punti decurtati per ogni anagrafe
+CREATE PROCEDURE PuntiDecurtatiAnagrafe
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Nome, a.Cognome, SUM (v.DecurtamentoPunti) AS TotalePuntiDecurtati FROM Anagrafica a
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica
+GROUP BY a.Nome, a.Cognome;
+END;
+
+EXEC PuntiDecurtatiAnagrafe;
+
+--cognome, nome, data violazione, indirizzo violazione, importo e punti decurtati per tutti gli anagrafici residenti a Palermo
+CREATE PROCEDURE GetAnagrafePerCitta
+@Citta NVARCHAR(50)
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Cognome, a.Nome, v.DataViolazione, v.IndirizzoViolazione, v.Importo, v.DecurtamentoPunti
+FROM Anagrafica a 
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica
+WHERE a.Città = @Citta;
+END;
+
+EXEC GetAnagrafePerCitta @Citta = 'Palermo';
+
+--cognome, nome, data violazione, indirizzo violazione, importo e punti decurtati per le violazioni fatte tra febbraio  e luglio 2009
+CREATE PROCEDURE VerbalePerData
+@Anno INT, @MeseFrom INT, @MeseTo INT
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Cognome, a.Nome, v.DataViolazione, v.IndirizzoViolazione, v.Importo, v.DecurtamentoPunti
+FROM Anagrafica a 
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica
+WHERE YEAR (v.DataViolazione) = @Anno AND MONTH (v.DataViolazione) BETWEEN @MeseFrom AND @MeseTo;
+END;
+
+EXEC VerbalePerData @Anno = 2009, @MeseFrom = 2, @MeseTo = 7;
+
+--totale degli importi per ogni anagrafico
+CREATE PROCEDURE ImportiAnagrafica
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Cognome, a.Nome, SUM(v.Importo) AS TotaleImportiAnagrafico FROM Anagrafica a
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica
+GROUP BY a.Cognome, a.Nome;
+END;
+
+EXEC ImportiAnagrafica;
+
+--visualizzazione di tutti gli anagrafici residenti a palermo
+CREATE PROCEDURE GetAllAnagrafePerCitta
+@Citta NVARCHAR(50)
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT * FROM Anagrafica WHERE Città = @Citta;
+END;
+
+EXEC GetAllAnagrafePerCitta @Citta = 'Palermo';
+
+--data violazione, importo e decurtazione punti relativa ad una certa data
+CREATE PROCEDURE VerbalePerAnno
+@Anno INT
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT DataViolazione, Importo, DecurtamentoPunti
+FROM Verbale WHERE YEAR (DataViolazione) = @Anno;
+END;
+
+EXEC VerbalePerAnno @Anno = 2019;
+
+--conteggio delle violazioni contestate raggruppate per nominativo dell'agente di polizia
+ALTER TABLE Verbale ADD Contestazione BIT;
+UPDATE Verbale SET Contestazione = 0 WHERE IDVerbale IS NOT NULL;
+UPDATE Verbale SET Contestazione = 1 WHERE IDVerbale IN(2,6,7,9,15,25);
+
+CREATE PROCEDURE VerbaliContestati
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT COUNT (v.IDVerbale), v.NominativoAgente FROM Verbale v
+WHERE v.Contestazione = 1
+GROUP BY v.NominativoAgente;
+END;
+
+EXEC VerbaliContestati;
+
+--cognome, nome, indirizzo, data violazione, importo e punti decurtati per tutte le violazioni che superano il decurtamento di 5 punti
+CREATE PROCEDURE ViolazioniPerPunti
+@Punti INT
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Nome, a.Cognome, a.Indirizzo, v.DataViolazione, v.Importo, v.DecurtamentoPunti AS TotalePuntiDecurtati FROM Anagrafica a
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica WHERE v.DecurtamentoPunti >@Punti;
+END;
+
+EXEC ViolazioniPerPunti @Punti =  5;
+
+--cognome, nome, indirizzo, data violazione, importo e punti decurtati per tutte le violazioni che superano i 400 euro
+CREATE PROCEDURE VerbaliPerSanzioni
+@Sanzione INT
+AS
+BEGIN
+SET NOCOUNT ON;
+SELECT a.Nome, a.Cognome, a.Indirizzo, v.DataViolazione, v.Importo, v.DecurtamentoPunti AS TotalePuntiDecurtati FROM Anagrafica a
+JOIN Verbale v ON v.IDAnagrafica = a.IDAnagrafica WHERE v.Importo > @Sanzione;
+END;
+
+EXEC VerbaliPerSanzioni @Sanzione = 400;
